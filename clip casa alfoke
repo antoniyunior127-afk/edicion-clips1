@@ -1,0 +1,160 @@
+!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViralClip Alofoke 3</title>
+<style>
+:root{--bg:#090d18;--panel:#121a2b;--panel2:#19243a;--line:#283957;--text:#f4f7ff;--muted:#aab7cf;--blue:#526dff;--cyan:#36d7ee;--pink:#ff3d83;--green:#19d69a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#172747 0,#090d18 48%);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+header{padding:22px 5%;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.logo{font-size:23px;font-weight:900;letter-spacing:.3px}.logo span{color:var(--cyan)}.tag{font-size:12px;color:var(--muted)}
+main{max-width:1200px;margin:24px auto;padding:0 16px}.hero{padding:20px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(120deg,#18294a,#111a2b);margin-bottom:18px}
+h1{font-size:clamp(24px,4vw,36px);margin:0 0 8px}.hero p{color:var(--muted);margin:0;line-height:1.5}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.panel{background:rgba(18,26,43,.96);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}
+h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted);font-size:13px;line-height:1.5}
+button,.filelabel{border:0;border-radius:10px;padding:11px 15px;background:var(--blue);color:white;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+button.secondary,.filelabel.secondary{background:#263653;border:1px solid #3b5074}button.danger{background:#a52b4d}button:disabled{opacity:.45;cursor:not-allowed}
+input,select{width:100%;background:#0b1220;color:white;border:1px solid #344866;border-radius:9px;padding:11px;margin:6px 0 12px}
+input[type=file]{display:none}.filelabel{margin:5px 0 12px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+video{width:100%;max-height:390px;background:#03060b;border-radius:12px;margin:8px 0;object-fit:contain}
+.previewbox{background:#070b13;border:1px solid var(--line);padding:9px;border-radius:13px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.rangegroup{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.small{font-size:12px;color:var(--muted)}.status{padding:10px;border-radius:9px;background:#0b1424;color:#a9c6ff;font-size:13px;margin-top:10px;line-height:1.45}
+.meter{height:7px;background:#263653;border-radius:20px;overflow:hidden;margin:10px 0}.meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.score{display:inline-block;padding:7px 10px;border-radius:9px;background:#102d36;color:#51f0c0;font-weight:800}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:28px 12px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.row,.rangegroup{grid-template-columns:1fr}header{padding:18px}}
+</style>
+</head>
+<body>
+<header><div><div class="logo">🔥 VIRAL<span>CLIP</span> ALOFOKE 3</div><div class="tag">Tu espacio para preparar clips y contenido</div></div><div class="tag">EDITOR LOCAL · VERSIÓN DEMO</div></header>
+<main>
+<section class="hero"><h1>Convierte videos en clips para redes</h1><p>Importa un video que tengas permiso para editar, selecciona el fragmento, elige el formato y expórtalo. También puedes grabar con tu cámara.</p></section>
+<div class="grid">
+<section class="panel">
+<h2>🎬 1. Video para editar</h2>
+<label class="filelabel" for="videoFile">＋ Seleccionar video del dispositivo</label><input id="videoFile" type="file" accept="video/*">
+<div class="previewbox"><video id="sourceVideo" controls playsinline></video></div>
+<div class="row">
+<div><label class="small" for="youtubeUrl">Enlace de YouTube (solo vista previa)</label><input id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=..."></div>
+<div style="display:flex;align-items:end"><button class="secondary" id="showYoutube">Abrir enlace</button></div>
+</div>
+<div class="status" id="videoStatus">Todavía no has seleccionado un video. Puedes importar un archivo desde tu dispositivo.</div>
+<h2 style="margin-top:22px">✂️ 2. Elegir el clip</h2>
+<div class="rangegroup">
+<div><label class="small">Comenzar (segundos)</label><input id="startTime" type="number" min="0" value="0"></div>
+<div><label class="small">Terminar (segundos)</label><input id="endTime" type="number" min="1" value="60"></div>
+</div>
+<div class="row">
+<div><label class="small">Duración sugerida</label><select id="duration"><option value="60">1 minuto</option><option value="90">1 minuto y 30 segundos</option><option value="120">2 minutos</option><option value="180">3 minutos</option><option value="300">5 minutos</option><option value="custom">Personalizada</option></select></div>
+<div><label class="small">Formato de salida</label><select id="format"><option value="9:16">Vertical 9:16 · TikTok / Reels</option><option value="16:9">Horizontal 16:9 · YouTube</option><option value="1:1">Cuadrado 1:1 · Facebook</option></select></div>
+</div>
+<div class="actions"><button id="previewClip" class="secondary">▶ Ver selección</button><button id="exportClip">✂ Exportar clip</button></div>
+<div class="meter"><span id="progress"></span></div><div class="small" id="exportStatus">El clip exportado se descargará en tu dispositivo.</div>
+</section>
+<section class="panel">
+<h2>🔴 3. Grabadora de cámara</h2>
+<p class="muted">Graba tu propio contenido. Mantén esta página abierta durante la grabación. El navegador pedirá permiso para usar la cámara y el micrófono.</p>
+<div class="previewbox"><video id="cameraVideo" autoplay muted playsinline></video></div>
+<div class="actions"><button id="cameraStart">Activar cámara</button><button id="recordStart" disabled>● Iniciar grabación</button><button id="recordStop" class="danger" disabled>■ Detener</button></div>
+<div class="status" id="cameraStatus">Cámara apagada.</div>
+<h2 style="margin-top:22px">📤 4. Publicar</h2>
+<p class="muted">Después de exportar, revisa el archivo y súbelo manualmente a tu cuenta de TikTok, YouTube o Facebook. No compartas contraseñas ni códigos de tus cuentas.</p>
+<div class="actions">
+<button class="secondary" id="openTikTok">TikTok</button><button class="secondary" id="openYouTube">YouTube</button><button class="secondary" id="openFacebook">Facebook</button>
+</div>
+<div class="status"><span class="score">Puntaje visual: --/100</span><br><br>El puntaje viral real no se puede calcular con certeza: depende del contenido, la audiencia y la plataforma.</div>
+</section>
+</div>
+</main>
+<footer>ViralClip Alofoke 3 · Los videos se procesan localmente en este navegador. No se suben a un servidor.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const video=$('sourceVideo');let sourceURL=null,cameraStream=null,recorder=null,recordedChunks=[];
+const fmt=s=>{if(!Number.isFinite(s))return '0:00';let m=Math.floor(s/60),r=Math.floor(s%60);return m+':'+String(r).padStart(2,'0')};
+$('videoFile').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;
+ if(sourceURL)URL.revokeObjectURL(sourceURL);
+ sourceURL=URL.createObjectURL(f);video.src=sourceURL;
+ $('videoStatus').textContent='Video cargado: '+f.name;
+});
+video.addEventListener('loadedmetadata',()=>{
+ $('endTime').value=Math.floor(video.duration);$('videoStatus').textContent='Duración del video: '+fmt(video.duration)+' · Listo para seleccionar un fragmento.';
+});
+$('duration').addEventListener('change',()=>{
+ if($('duration').value!=='custom')$('endTime').value=Math.min(video.duration||Number($('duration').value),Number($('startTime').value)+Number($('duration').value));
+});
+$('showYoutube').onclick=()=>{
+ const url=$('youtubeUrl').value.trim();
+ if(!/^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(url)){alert('Pega un enlace válido de YouTube que comience con https://');return;}
+ window.open(url,'_blank','noopener');
+ $('videoStatus').textContent='YouTube se abrió en otra pestaña. Para editar, importa un archivo de video autorizado.';
+};
+$('previewClip').onclick=()=>{
+ if(!video.src){alert('Primero selecciona un archivo de video.');return;}
+ const s=Math.max(0,Number($('startTime').value)||0),e=Number($('endTime').value)||0;
+ if(e<=s){alert('La hora final debe ser mayor que la inicial.');return;}
+ video.currentTime=s;video.play();
+ const stop=()=>{if(video.currentTime>=e){video.pause();video.removeEventListener('timeupdate',stop);}};
+ video.addEventListener('timeupdate',stop);
+};
+function canvasSize(r){return r==='9:16'?[720,1280]:r==='16:9'?[1280,720]:[1080,1080]}
+function mimeType(){return ['video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||''}
+$('exportClip').onclick=async()=>{
+ if(!video.src){alert('Primero selecciona un archivo de video.');return;}
+ const start=Math.max(0,Number($('startTime').value)||0),end=Number($('endTime').value)||0;
+ if(end<=start||end>video.duration+0.1){alert('Revisa el inicio y el final. Deben estar dentro de la duración del video.');return;}
+ if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){alert('Tu navegador no permite exportar este tipo de clip. Prueba con Chrome o Edge actualizado.');return;}
+ const [w,h]=canvasSize($('format').value),canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+ const ctx=canvas.getContext('2d'),stream=canvas.captureStream(30);
+ try{if(video.captureStream){video.muted=false;video.volume=1;const vs=video.captureStream();vs.getAudioTracks().forEach(t=>stream.addTrack(t));}}catch(err){}
+ const mt=mimeType();let chunks=[];
+ try{
+  const mr=new MediaRecorder(stream,mt?{mimeType:mt}:undefined);
+  mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  mr.onstop=()=>{
+   const type=mr.mimeType||'video/webm',blob=new Blob(chunks,{type}),ext=type.includes('mp4')?'mp4':'webm';
+   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='viralclip-'+Date.now()+'.'+ext;a.click();
+   setTimeout(()=>URL.revokeObjectURL(a.href),30000);
+   $('exportStatus').textContent='¡Clip listo! Formato descargado: '+ext.toUpperCase()+'.';
+   $('progress').style.width='100%';stream.getTracks().forEach(t=>t.stop());video.pause();
+  };
+  const draw=()=>{
+   const vw=video.videoWidth,vh=video.videoHeight;if(!vw||!vh)return;
+   const scale=Math.max(w/vw,h/vh),sw=w/scale,sh=h/scale,sx=(vw-sw)/2,sy=(vh-sh)/2;
+   ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);ctx.drawImage(video,sx,sy,sw,sh,0,0,w,h);
+  };
+  video.pause();video.currentTime=start;
+  await new Promise(resolve=>video.addEventListener('seeked',resolve,{once:true}));
+  draw();mr.start(500);video.play();
+  $('exportStatus').textContent='Exportando… no cierres esta pestaña.';
+  const tick=()=>{
+   if(video.currentTime>=end||video.ended){video.pause();mr.stop();return;}
+   draw();$('progress').style.width=Math.min(99,((video.currentTime-start)/(end-start))*100)+'%';
+   requestAnimationFrame(tick);
+  };requestAnimationFrame(tick);
+ }catch(err){alert('No se pudo exportar. Intenta con Chrome o Edge y otro archivo.');console.error(err);}
+};
+$('cameraStart').onclick=async()=>{
+ try{cameraStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});$('cameraVideo').srcObject=cameraStream;$('recordStart').disabled=false;$('cameraStatus').textContent='Cámara activa. Ya puedes grabar.';}
+ catch(e){$('cameraStatus').textContent='No se pudo activar la cámara. Revisa los permisos del navegador y usa HTTPS o localhost.';}
+};
+$('recordStart').onclick=()=>{
+ if(!cameraStream)return;recordedChunks=[];
+ const mt=mimeType();recorder=new MediaRecorder(cameraStream,mt?{mimeType:mt}:undefined);
+ recorder.ondataavailable=e=>{if(e.data.size)recordedChunks.push(e.data)};
+ recorder.onstop=()=>{
+  const type=recorder.mimeType||'video/webm',blob=new Blob(recordedChunks,{type}),ext=type.includes('mp4')?'mp4':'webm';
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='grabacion-'+Date.now()+'.'+ext;a.click();
+  $('cameraStatus').textContent='Grabación guardada en tu dispositivo.';
+ };
+ recorder.start(1000);$('recordStart').disabled=true;$('recordStop').disabled=false;$('cameraStatus').textContent='🔴 Grabando…';
+};
+$('recordStop').onclick=()=>{if(recorder&&recorder.state!=='inactive')recorder.stop();$('recordStart').disabled=false;$('recordStop').disabled=true;};
+$('openTikTok').onclick=()=>window.open('https://www.tiktok.com/upload','_blank','noopener');
+$('openYouTube').onclick=()=>window.open('https://studio.youtube.com','_blank','noopener');
+$('openFacebook').onclick=()=>window.open('https://www.facebook.com/','_blank','noopener');
+window.addEventListener('beforeunload',()=>{if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());if(sourceURL)URL.revokeObjectURL(sourceURL);});
+</script>
+</body></html>
